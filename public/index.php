@@ -1,15 +1,59 @@
 <?php
 // Punto de entrada - Servidor PHP Built-in
 
-// Cargar configuración
+// ✅ PASO 1: Manejar archivos estáticos PRIMERO (CSS, JS, imágenes, etc.)
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$parsedUrl = parse_url($requestUri);
+$requestPath = $parsedUrl['path'] ?? '/';
+
+// Verificar si es un archivo estático
+if (preg_match('/\.(css|js|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|eot|mp4|webm|mp3|pdf|txt)$/i', $requestPath)) {
+    $filePath = __DIR__ . $requestPath;
+    
+    if (file_exists($filePath) && is_file($filePath)) {
+        // Determinar tipo MIME
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'json' => 'application/json',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'woff' => 'font/woff',
+            'woff2' => 'font/woff2',
+            'ttf' => 'font/ttf',
+            'eot' => 'application/vnd.ms-fontobject',
+            'mp4' => 'video/mp4',
+            'webm' => 'video/webm',
+            'mp3' => 'audio/mpeg',
+            'pdf' => 'application/pdf',
+            'txt' => 'text/plain',
+        ];
+        
+        $mimeType = $mimeTypes[$extension] ?? 'application/octet-stream';
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($filePath));
+        readfile($filePath);
+        exit;
+    } else {
+        // Archivo estático no encontrado
+        http_response_code(404);
+        echo "Archivo no encontrado: " . htmlspecialchars($requestPath);
+        exit;
+    }
+}
+
+// ✅ PASO 2: Cargar configuración (solo si no es archivo estático)
 require_once __DIR__ . '/../config/config.php';
 
 // Cargar rutas
 $routes = require_once __DIR__ . '/../routes/web.php';
 
 // Obtener la ruta solicitada (solo la parte de la URL después del dominio)
-$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-$parsedUrl = parse_url($requestUri);
 $path = $parsedUrl['path'] ?? '/';
 
 // Normalizar ruta: asegurar que empiece con /

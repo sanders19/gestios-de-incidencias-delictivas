@@ -14,6 +14,8 @@ define('UPLOAD_PATH', PUBLIC_PATH . '/uploads');
 if (!defined('BASE_URL')) {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
+    // Como usas php -S localhost:8000 public/index.php
+    // La raíz es http://localhost:8000
     define('BASE_URL', $protocol . '://' . $host);
 }
 
