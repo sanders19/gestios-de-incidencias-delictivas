@@ -1,42 +1,90 @@
-<!-- views/mesa/busqueda.php -->
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+
 <div class="container mt-4">
-    <h2>Buscar Incidencias</h2>
-    <form action="/sistema-policial/mesa/busqueda" method="GET" class="mb-4">
-        <div class="row">
+    <h2 class="text-success mb-4">Búsqueda de Incidencias (Mesa de Partes)</h2>
+
+    <form method="POST" class="card p-4 shadow-sm bg-light border-success mb-4">
+        <div class="row mb-3">
             <div class="col-md-4">
-                <input type="text" class="form-control" name="query" placeholder="Título o ID de incidencia">
-            </div>
-            <div class="col-md-3">
-                <select class="form-control" name="estado">
-                    <option value="">Todos los estados</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En Progreso</option>
-                    <option value="resuelta">Resuelta</option>
+                <label class="form-label">Tipo de delito</label>
+                <select name="tipo_delito" class="form-select">
+                    <option value="">Todos</option>
+                    <?php foreach ($tipos as $t): ?>
+                        <option value="<?= htmlspecialchars($t['tipo_delito']) ?>">
+                            <?= htmlspecialchars($t['tipo_delito']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-3">
-                <input type="date" class="form-control" name="fecha">
+            <div class="col-md-4">
+                <label class="form-label">Estado</label>
+                <select name="estado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Recibido">Recibido</option>
+                    <option value="Investigando">Investigando</option>
+                    <option value="Resuelto">Resuelto</option>
+                </select>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+            <div class="col-md-4">
+                <label class="form-label">Zona</label>
+                <select name="id_zona" class="form-select">
+                    <option value="">Todas</option>
+                    <?php foreach ($zonas as $z): ?>
+                        <option value="<?= $z['id_zona'] ?>"><?= htmlspecialchars($z['nombre']) ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Fecha desde</label>
+                <input type="date" name="fecha_desde" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Fecha hasta</label>
+                <input type="date" name="fecha_hasta" class="form-control">
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success px-4">Buscar</button>
+            <a href="<?= BASE_URL ?>/mesa/dashboard" class="btn btn-outline-secondary ms-2">← Volver</a>
         </div>
     </form>
-    <h3>Resultados</h3>
-    <div class="row">
-        <!-- Ejemplo de resultados -->
-        <?php include __DIR__ . '/../components/tarjeta-incidencia.php'; ?>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Incidencia #123</h5>
-                    <p class="card-text">Robo en Av. Principal</p>
-                    <p class="card-text"><small class="text-muted">Fecha: 2025-10-09</small></p>
-                    <a href="/sistema-policial/mesa/busqueda?id=123" class="btn btn-primary">Ver Detalle</a>
-                </div>
-            </div>
+
+    <?php if (!empty($resultados)): ?>
+        <h3 class="text-success mb-3">Resultados (<?= count($resultados) ?>)</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo de Delito</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($resultados as $inc): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($inc['id_incidencia']) ?></td>
+                            <td><?= htmlspecialchars($inc['tipo_delito']) ?></td>
+                            <td><?= htmlspecialchars($inc['direccion_incidencia']) ?></td>
+                            <td><?= htmlspecialchars($inc['estado']) ?></td>
+                            <td><?= htmlspecialchars($inc['prioridad']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-    </div>
+    <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+        <div class="alert alert-warning text-center">No se encontraron incidencias con los filtros aplicados.</div>
+    <?php endif; ?>
 </div>
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+
+<script src="<?= BASE_URL ?>/js/busqueda.js"></script>
+
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

@@ -1,42 +1,51 @@
-<!-- views/jefe/perfil.php -->
-<?php include __DIR__ . '/../layouts/header.php'; ?>
-<div class="container mt-4">
-    <h2>Mi Perfil</h2>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Información del Usuario</h5>
-            <p><strong>Nombre:</strong> <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Usuario'; ?></p>
-            <p><strong>Correo:</strong> <?php echo isset($_SESSION['email']) ? $_SESSION['email'] : 'correo@ejemplo.com'; ?></p>
-            <p><strong>Rol:</strong> Jefe</p>
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfil">Editar Perfil</a>
-        </div>
-    </div>
-    <div class="modal fade" id="editarPerfil" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/sistema-policial/jefe/perfil" method="POST">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : ''; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Nueva Contraseña (opcional)</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+
+<style>
+/* Estilos internos para perfil JEFE (idénticos a SEINCRI) */
+.perfil-container {
+    background-color: #f8fdf8; /* Verde muy claro de fondo */
+    padding: 20px;
+    border-left: 5px solid #0a7a0a; /* Verde PNP principal */
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.perfil-container h2 {
+    color: #0a7a0a; /* Verde PNP */
+    margin-bottom: 20px;
+}
+
+.perfil-container p {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #004d00; /* Verde oscuro para textos */
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #0a7a0a; /* Verde PNP */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-volver:hover {
+    background-color: #046b04; /* Verde más oscuro al pasar mouse */
+    text-decoration: none;
+}
+</style>
+
+<div class="perfil-container">
+    <h2>👮‍♂️ Perfil - Jefe</h2>
+    <p><strong>Usuario:</strong> <?= htmlspecialchars(Session::get('usuario')['nombre_completo']) ?></p>
+    <p><strong>Comisaría:</strong> <?= htmlspecialchars(Session::get('usuario')['comisaria']) ?></p>
+    <p><strong>Último acceso:</strong> <?= Session::get('usuario')['ultimo_acceso'] ?: 'Nunca' ?></p>
+    <p><strong>Total incidencias en sistema:</strong> <?= $totalIncidencias ?></p>
+    <p><strong>Incidencias resueltas:</strong> <?= $resueltas ?></p>
+    <a href="<?= BASE_URL ?>/jefe/dashboard" class="btn-volver">← Volver al Dashboard</a>
 </div>
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

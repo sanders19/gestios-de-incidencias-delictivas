@@ -1,0 +1,19 @@
+/* === FOOTER FIJO AL BORDE INFERIOR === */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #36230a; /* verde institucional tipo PNP */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+/* Evita que el contenido se oculte detrás del footer */
+body {
+    padding-bottom: 60px; /* altura aproximada del footer */
+}
+

@@ -1,0 +1,20 @@
+# Ignorar archivos temporales
+*.log
+*.tmp
+/logs/
+/tmp/
+
+# Ignorar configuración local
+.env
+config/config.php
+
+# Ignorar sesiones
+/sessions/
+
+# Ignorar vendor (si usas composer)
+/vendor/
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.code-workspace

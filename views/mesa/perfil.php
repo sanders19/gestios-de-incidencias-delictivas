@@ -1,44 +1,48 @@
-<!-- views/mesa/perfil.php -->
-<?php include __DIR__ . '/../layouts/header.php'; ?>
-<div class="container mt-4">
-    <h2>Mi Perfil</h2>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Información del Usuario</h5>
-            <!-- Datos estáticos, deben venir del controlador -->
-            <p><strong>Nombre:</strong> <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Usuario'; ?></p>
-            <p><strong>Correo:</strong> <?php echo isset($_SESSION['email']) ? $_SESSION['email'] : 'correo@ejemplo.com'; ?></p>
-            <p><strong>Rol:</strong> Mesa de Partes</p>
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfil">Editar Perfil</a>
-        </div>
-    </div>
-    <!-- Modal para editar perfil -->
-    <div class="modal fade" id="editarPerfil" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/sistema-policial/mesa/perfil" method="POST">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : ''; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Nueva Contraseña (opcional)</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+
+<style>
+/* Estilos internos para perfil */
+.perfil-container {
+    background-color: #fff;
+    padding: 20px;
+    border-left: 5px solid #006400; /* Verde PNP */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.perfil-container h2 {
+    color: #004d00;
+    margin-bottom: 20px;
+}
+
+.perfil-container p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #006400;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn-volver:hover {
+    background-color: #004d00;
+    text-decoration: none;
+}
+</style>
+
+<div class="perfil-container">
+    <h2>👤 Perfil - Mesa de Partes</h2>
+    <p><strong>Usuario:</strong> <?= htmlspecialchars(Session::get('usuario')['nombre_completo']) ?></p>
+    <p><strong>Comisaría:</strong> <?= htmlspecialchars(Session::get('usuario')['comisaria']) ?></p>
+    <p><strong>Último acceso:</strong> <?= Session::get('usuario')['ultimo_acceso'] ?: 'Nunca' ?></p>
+    <p><strong>Incidencias registradas:</strong> <?= $totalRegistradas ?></p>
+    
 </div>
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
